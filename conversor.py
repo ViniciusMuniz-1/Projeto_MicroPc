@@ -145,9 +145,11 @@ instbin.append(numbin)
 instbin.insert(0, "0b")
 separator = ''
 result = [separator.join(instbin)]
+result = str(result).strip('[]').strip("''")
+bin = int(result,2)
 
 
 #Abre o arquivo para transcrever as operações em hexadecimal, em seguida escreve o 
 #número em hexadecimal em outro arquivo
 arqhex = open("intructionshex.txt", "w+")
-print(hex(result))
+print(hex(bin))
