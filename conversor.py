@@ -5,96 +5,62 @@
 #Função que possui a função de transformar um número em binário para hexadecimal. 
                  #Entrada: lista em bin com os números separados em 4 casas cada um; 
                  #Saída: lista em hex
-# def bintohex(l): 
-#     for num in bin:
-#         if(num == "0000"):
-#             num = "0"
-#             numhex.append(num)
-#         elif(num == "0001"):
-#             num = "1"
-#             numhex.append(num)
-#         elif(num == "0010"):
-#             num = "2"
-#             numhex.append(num)
-#         elif(num == "0011"):
-#             num = "3"
-#             numhex.append(num)
-#         elif(num == "0100"):
-#             num = "4"
-#             numhex.append(num)
-#         elif(num == "0101"):
-#             num = "5"
-#             numhex.append(num)
-#         elif(num == "0110"):
-#             num = "6"
-#             numhex.append(num)
-#         elif(num == "0111"):
-#             num = "7"
-#             numhex.append(num)
-#         elif(num == "1000"):
-#             num = "8"
-#             numhex.append(num)
-#         elif(num == "1001"):
-#             num = "9"
-#             numhex.append(num)
-#         elif(num == "1010"):
-#             num = "a"
-#             numhex.append(num)
-#         elif(num == "1011"):
-#             num = "b"
-#             numhex.append(num)
-#         elif(num == "1100"):
-#             num = "c"
-#             numhex.append(num)
-#         elif(num == "1101"):
-#             num = "d"
-#             numhex.append(num)
-#         elif(num == "1110"):
-#             num = "e"
-#             numhex.append(num)
-#         elif(num == "1111"):
-#             num = "f"
-#             numhex.append(num)
-#     return numhex
-
 
 #Bloco de código que transforma a instrução em binário
 def insttobin(instruction):
     for inst in instruction:
-        if inst == "addi":
-            instbin.append("001000")
-        elif inst == "ori":
-            instbin.append("001101")
-        elif inst == "xori":
-            instbin.append("001110")
-        elif inst=="andi":
-            instbin.append("001100")
-        elif inst=="addiu":
-            instbin.append("001001")
-        elif inst=="and":
-            instbin.append("100100")
-        elif inst=="or":
-            instbin.append("100101")
-        elif inst=="xor":
-            instbin.append("100110")
-        elif inst=="nor":
-            instbin.append("100111")
-        elif inst=="add":
-            instbin.append("100000")
-        elif inst=="sub":
-            instbin.append("100010")
-        elif inst=="shl":
-            instbin.append("000000")
-        elif inst=="shr":
-            instbin.append("000001")
-        elif inst=="sar":
-            instbin.append("000011")
-        elif inst=="slt":
-            instbin.append("101010")
-        elif inst=="beq":
-            instbin.append("000100")
-        elif inst=="bne":
-            instbin.append("000101")
+        match inst:
+            case "addi":
+                instbin.append("001000")
+                break
+            case "ori":
+                instbin.append("001101") 
+                break
+            case "xori":
+                instbin.append("001110")
+                break
+            case "andi":
+                instbin.append("001100")
+                break
+            case "addiu":
+                instbin.append("001001")
+                break
+            case "and":
+                instbin.append("100100")
+                break
+            case "or":
+                instbin.append("100101")
+                break
+            case "xor":
+                instbin.append("100110")
+                break
+            case "nor":
+                instbin.append("100111")
+                break
+            case "add":
+                instbin.append("100000")
+                break
+            case "sub":
+                instbin.append("100010")
+                break
+            case "shl":
+                instbin.append("000000")
+                break
+            case "shr":
+                instbin.append("000001")
+                break
+            case "sar":
+                instbin.append("000011")
+                break
+            case "slt":
+                instbin.append("101010")
+                break
+            case "beq":
+                instbin.append("000100")
+                break
+            case "bne":
+                instbin.append("000101")
+                break
 
 def verificareg(instruction):
     for inst in instruction:
@@ -164,23 +130,24 @@ def verificareg(instruction):
             case "$31":
                 instbin.append("11111")
 
-instbin=[]
 
 #Bloco de código que abre o arquivo e coloca as instruções em uma variável
-arqinstructions = open("intrucoes.txt")
-instruction = arqinstructions.readlines()
 
+arquivo = open("Projeto_MicroPc/intrucoes.txt")
+instruction = arquivo.readlines()
+string = str(instruction).strip('[]').strip("''")
+string = string.split(" ")
+instbin=[]
+insttobin(string)
+verificareg(string)
+numbin = "{:016d}".format(int(bin(int(string[3])).strip("0b")))
+instbin.append(numbin)
+instbin.insert(0, "0b")
+separator = ''
+result = [separator.join(instbin)]
 
-#Linha de código que transforma em string e retira os colchetes e aspas, já que se tratava de uma lista antes
-instruction = str(instruction).strip('[]').strip("''")
 
 #Abre o arquivo para transcrever as operações em hexadecimal, em seguida escreve o 
 #número em hexadecimal em outro arquivo
 arqhex = open("intructionshex.txt", "w+")
-numhex = []
-cont = 0
-for num in bin:
-    arqhex.write(numhex[cont])
-    cont+=1
- 
-hex(numhex)
+print(hex(result))
