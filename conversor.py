@@ -7,64 +7,45 @@
                  #Saída: lista em hex
 
 #Bloco de código que transforma a instrução em binário
-def insttobin(instruction):
-    for inst in instruction:
-        match inst:
+def verificaop(instruction):
+        match instruction:
             case "addi":
                 instbin.append("001000")
-                break
             case "ori":
                 instbin.append("001101") 
-                break
             case "xori":
                 instbin.append("001110")
-                break
             case "andi":
                 instbin.append("001100")
-                break
             case "addiu":
                 instbin.append("001001")
-                break
             case "and":
                 instbin.append("100100")
-                break
             case "or":
                 instbin.append("100101")
-                break
             case "xor":
                 instbin.append("100110")
-                break
             case "nor":
                 instbin.append("100111")
-                break
             case "add":
                 instbin.append("100000")
-                break
             case "sub":
                 instbin.append("100010")
-                break
             case "shl":
                 instbin.append("000000")
-                break
             case "shr":
                 instbin.append("000001")
-                break
             case "sar":
                 instbin.append("000011")
-                break
             case "slt":
                 instbin.append("101010")
-                break
             case "beq":
                 instbin.append("000100")
-                break
             case "bne":
                 instbin.append("000101")
-                break
 
 def verificareg(instruction):
-    for inst in instruction:
-        match inst:
+    match instruction:
             case "$0":
                 instbin.append("00000")
             case "$1":
@@ -130,26 +111,35 @@ def verificareg(instruction):
             case "$31":
                 instbin.append("11111")
 
+instbin=[]
+valuedec=[]
+instruction=[]
+separator = ''
 
 #Bloco de código que abre o arquivo e coloca as instruções em uma variável
-
 arquivo = open("Projeto_MicroPc/intrucoes.txt")
-instruction = arquivo.readlines()
-string = str(instruction).strip('[]').strip("''")
-string = string.split(" ")
-instbin=[]
-insttobin(string)
-verificareg(string)
-numbin = "{:016d}".format(int(bin(int(string[3])).strip("0b")))
-instbin.append(numbin)
-instbin.insert(0, "0b")
-separator = ''
-result = [separator.join(instbin)]
-result = str(result).strip('[]').strip("''")
-bin = int(result,2)
+for line in arquivo.readlines():
+    instruction.append(line)
+instruction = ' '.join(map(str, instruction)).split(" ")
 
+ #op rega regb value
+verificaop(instruction[0]) #verifica a operação
+verificareg(instruction[1]) #verifica primeiro registrador
+verificareg(instruction[2])
+
+if '$' in instruction[3]:
+    verificareg(instruction[3])
+else:
+    instruction = "{:016d}".format(int(bin(int(instruction[3])).replace("0b","")))
+instbin.append(instruction)
+instbin.insert(0, "0b")
+
+
+instbin = [separator.join(instbin)]
+instbin = str(instbin).strip('[]').strip("''")
+valuedec.append(int(instbin,2))
 
 #Abre o arquivo para transcrever as operações em hexadecimal, em seguida escreve o 
 #número em hexadecimal em outro arquivo
-arqhex = open("intructionshex.txt", "w+")
-print(hex(bin))
+arqhex = open("Projeto_MicroPc/intructionshex.txt", "w+")
+print(hex(valuedec[0]))
