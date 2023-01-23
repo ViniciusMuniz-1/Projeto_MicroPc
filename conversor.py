@@ -122,19 +122,25 @@ for line in arquivo.readlines():
     instruction.append(line)
 instruction = ' '.join(map(str, instruction)).split(" ")
 
- #op rega regb value
-verificaop(instruction[0]) #verifica a operação
-verificareg(instruction[1]) #verifica primeiro registrador
-verificareg(instruction[2])
-
-if '$' in instruction[3]:
-    verificareg(instruction[3])
-else:
+if "i" in instruction[0]: #CASO DO OPCODE COMO OPERADOR
+    #op rega regb value
+    verificaop(instruction[0]) #verifica a operação
+    verificareg(instruction[1]) #verifica primeiro registrador
+    verificareg(instruction[2]) #verifica segundo registrador
     instruction = "{:016d}".format(int(bin(int(instruction[3])).replace("0b","")))
-instbin.append(instruction)
+    instbin.append(instruction)
+else: #CASO DO FUNCTION COMO OPERADOR
+    #rega #regb #regc #op
+    instbin.append("000000") #adiciona valor 0 ao opcode
+    verificareg(instruction[1]) #verifica reg 1
+    verificareg(instruction[2]) #verifica reg 2
+    verificareg(instruction[3]) #verifica reg 3
+    instbin.append("00000") #verifica sa
+    verificaop(instruction[0]) #add instrução
+
 instbin.insert(0, "0b")
 
-
+#Transformando para decimal
 instbin = [separator.join(instbin)]
 instbin = str(instbin).strip('[]').strip("''")
 valuedec.append(int(instbin,2))
