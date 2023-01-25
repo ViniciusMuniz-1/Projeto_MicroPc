@@ -152,5 +152,7 @@ for line in arquivo.readlines():
     #limpa a 1º linha de instrução para fazer a próxima
     instruction.clear()
 
-for num in range(cont):
-    print(hex(valuedec[num]))
+for i in range(cont):
+    arqhex = open("instructionshex.txt", "a")
+    valuehex = hex(valuedec[i]) + "\n"
+    arqhex.write(valuehex)
