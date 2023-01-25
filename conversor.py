@@ -134,9 +134,11 @@ for line in arquivo.readlines():
         if "-" in instruction[3]:
             b = "1"
             instruction[3] = instruction[3].replace("-","")
-            sub = bin(~int(instruction[3],2) - int(b, 2))
+            numbin = bin(~int(instruction[3]))
+            numbin = numbin.replace("-", "")
+            sub = bin(int(numbin,2) - int(b, 2))
             imm = sub.replace("0b","")
-            imm = imm + imm.rjust(16, "1")
+            imm = imm.rjust(16, "1")
             imm = imm.replace("-", "")
         else:
             imm = "{:016d}".format(int(bin(int(instruction[3])).replace("0b","")))
@@ -160,7 +162,7 @@ for line in arquivo.readlines():
     #limpa a 1º linha de instrução para fazer a próxima
     instruction.clear()
 
-for i in range(cont):
+for i in range(0,cont+1):
     arqhex = open("instructionshex.txt", "a")
     valuehex = hex(valuedec[i]) + "\n"
     arqhex.write(valuehex)
