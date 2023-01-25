@@ -131,7 +131,15 @@ for line in arquivo.readlines():
         verificaop(instruction[0]) #verifica a operação
         verificareg(instruction[1]) #verifica primeiro registrador
         verificareg(instruction[2]) #verifica segundo registrador
-        imm = "{:016d}".format(int(bin(int(instruction[3])).replace("0b","")))
+        if "-" in instruction[3]:
+            b = "1"
+            instruction[3] = instruction[3].replace("-","")
+            sub = bin(~int(instruction[3],2) - int(b, 2))
+            imm = sub.replace("0b","")
+            imm = imm + imm.rjust(16, "1")
+            imm = imm.replace("-", "")
+        else:
+            imm = "{:016d}".format(int(bin(int(instruction[3])).replace("0b","")))
         instbin.append(imm)
     else: #CASO DO FUNCTION COMO OPERADOR
         #rega #regb #regc #op
