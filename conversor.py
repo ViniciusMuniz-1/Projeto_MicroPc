@@ -126,7 +126,7 @@ for line in arquivo.readlines():
     instruction.append(line)
     instruction = ' '.join(map(str, instruction)).split(" ")
 
-    if "i" in instruction[0]: #CASO DO OPCODE COMO OPERADOR
+    if ("i" in instruction[0]) or (instruction[0]=="beq") or (instruction[0]=="bne"): #CASO DO OPCODE COMO OPERADOR
         #op rega regb value
         verificaop(instruction[0]) #verifica a operação
         verificareg(instruction[1]) #verifica primeiro registrador
@@ -162,7 +162,14 @@ for line in arquivo.readlines():
     #limpa a 1º linha de instrução para fazer a próxima
     instruction.clear()
 
-for i in range(0,cont+1):
-    arqhex = open("instructionshex.txt", "a")
-    valuehex = hex(valuedec[i]) + "\n"
-    arqhex.write(valuehex)
+
+valuehex=[]
+for i in range(0,cont):
+    valuehex.append(hex(valuedec[i]).replace("0x", "") + "\n")
+
+print("Nome do arquivo:")
+nome = input()+".txt"
+arqhex = open(nome, 'w')
+arqhex.write("v2.0 raw\n")
+arqhex.writelines(valuehex)
+arqhex.close()
