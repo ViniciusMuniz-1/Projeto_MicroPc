@@ -6,6 +6,13 @@
                  #Entrada: lista em bin com os números separados em 4 casas cada um; 
                  #Saída: lista em hex
 
+#Bloco de código utilizado para abrir a seleção de arquivos
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
+
+janela_padrao = Tk().withdraw()
+caminho_do_arquivo = askopenfilename(filetypes = (("Arquivos de texto", "*.txt"), ("Arquivos csv", "*.csv")))
+
 #Bloco de código que transforma a instrução em binário
 def verificaop(instruction):
         match instruction:
@@ -118,49 +125,49 @@ separator = ''
 cont = 0
 
 #Bloco de código que abre o arquivo e coloca as instruções em uma variável
-arquivo = open("intrucoes.txt")
-for line in arquivo.readlines():
-    cont+=1
-    instbin=[]
-    line = line.replace("\n", "")
-    instruction.append(line)
-    instruction = ' '.join(map(str, instruction)).split(" ")
+with open(caminho_do_arquivo, encoding='latin_1') as arquivo:
+    for line in arquivo:
+        cont+=1
+        instbin=[]
+        line = line.replace("\n", "")
+        instruction.append(line)
+        instruction = ' '.join(map(str, instruction)).split(" ")
 
-    if ("i" in instruction[0]) or (instruction[0]=="beq") or (instruction[0]=="bne"): #CASO DO OPCODE COMO OPERADOR
-        #op rega regb value
-        verificaop(instruction[0]) #verifica a operação
-        verificareg(instruction[1]) #verifica primeiro registrador
-        verificareg(instruction[2]) #verifica segundo registrador
-        if "-" in instruction[3]:
-            b = "1"
-            instruction[3] = instruction[3].replace("-","")
-            numbin = bin(~int(instruction[3]))
-            numbin = numbin.replace("-", "")
-            sub = bin(int(numbin,2) - int(b, 2))
-            imm = sub.replace("0b","")
-            imm = imm.rjust(16, "1")
-            imm = imm.replace("-", "")
-        else:
-            imm = "{:016d}".format(int(bin(int(instruction[3])).replace("0b","")))
-        instbin.append(imm)
-    else: #CASO DO FUNCTION COMO OPERADOR
-        #rega #regb #regc #op
-        instbin.append("000000") #adiciona valor 0 ao opcode
-        verificareg(instruction[1]) #verifica reg 1
-        verificareg(instruction[2]) #verifica reg 2
-        verificareg(instruction[3]) #verifica reg 3
-        instbin.append("00000") #verifica sa
-        verificaop(instruction[0]) #add instrução
+        if ("i" in instruction[0]) or (instruction[0]=="beq") or (instruction[0]=="bne"): #CASO DO OPCODE COMO OPERADOR
+            #op rega regb value
+            verificaop(instruction[0]) #verifica a operação
+            verificareg(instruction[1]) #verifica primeiro registrador
+            verificareg(instruction[2]) #verifica segundo registrador
+            if "-" in instruction[3]:
+                b = "1"
+                instruction[3] = instruction[3].replace("-","")
+                numbin = bin(~int(instruction[3]))
+                numbin = numbin.replace("-", "")
+                sub = bin(int(numbin,2) - int(b, 2))
+                imm = sub.replace("0b","")
+                imm = imm.rjust(16, "1")
+                imm = imm.replace("-", "")
+            else:
+                imm = "{:016d}".format(int(bin(int(instruction[3])).replace("0b","")))
+            instbin.append(imm)
+        else: #CASO DO FUNCTION COMO OPERADOR
+            #rega #regb #regc #op
+            instbin.append("000000") #adiciona valor 0 ao opcode
+            verificareg(instruction[1]) #verifica reg 1
+            verificareg(instruction[2]) #verifica reg 2
+            verificareg(instruction[3]) #verifica reg 3
+            instbin.append("00000") #verifica sa
+            verificaop(instruction[0]) #add instrução
 
-    instbin.insert(0, "0b")
+        instbin.insert(0, "0b")
 
-    #Transformando para decimal
-    instbin = [separator.join(instbin)]
-    instbin = str(instbin).strip('[]').strip("''")
-    valuedec.append(int(instbin,2))
+        #Transformando para decimal
+        instbin = [separator.join(instbin)]
+        instbin = str(instbin).strip('[]').strip("''")
+        valuedec.append(int(instbin,2))
 
-    #limpa a 1º linha de instrução para fazer a próxima
-    instruction.clear()
+        #limpa a 1º linha de instrução para fazer a próxima
+        instruction.clear()
 
 
 valuehex=[]
