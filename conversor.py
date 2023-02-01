@@ -118,6 +118,41 @@ def verificareg(instruction):
             case "$31":
                 instbin.append("11111")
 
+def casoopcode(instruction):
+     #op rega regb value
+        verificaop(instruction[0]) #verifica a operação
+        verificareg(instruction[1]) #verifica primeiro registrador
+        verificareg(instruction[2]) #verifica segundo registrador
+        if "-" in instruction[3]:
+            b = "1"
+            instruction[3] = instruction[3].replace("-","")
+            numbin = bin(~int(instruction[3]))
+            numbin = numbin.replace("-", "")
+            sub = bin(int(numbin,2) - int(b, 2))
+            imm = sub.replace("0b","")
+            imm = imm.rjust(16, "1")
+            imm = imm.replace("-", "")
+        else:
+            imm = "{:016d}".format(int(bin(int(instruction[3])).replace("0b","")))
+        instbin.append(imm)
+
+def casofunction(instruction):
+    #rega #regb #regc #op
+    if instruction[0] == "shl" or instruction[0] == "shr" or instruction[0] == "sar":
+        instbin.append("000000") #adiciona valor 0 ao opcode
+        verificareg(instruction[1]) #verifica reg 1
+        verificareg(instruction[1]) #verifica reg 2
+        verificareg(instruction[2]) #verifica reg 3
+        sa = "{:05d}".format(int(bin(int(instruction[3])).replace("0b","")))
+        instbin.append(sa)
+        verificaop(instruction[0]) #add instrução
+    else:
+        instbin.append("000000") #adiciona valor 0 ao opcode
+        verificareg(instruction[1]) #verifica reg 1
+        verificareg(instruction[2]) #verifica reg 2
+        verificareg(instruction[3]) #verifica reg 3
+        instbin.append("00000") #verifica sa
+        verificaop(instruction[0]) #add instrução
 
 valuedec=[]
 instruction=[]
@@ -134,31 +169,9 @@ with open(caminho_do_arquivo, encoding='latin_1') as arquivo:
         instruction = ' '.join(map(str, instruction)).split(" ")
 
         if ("i" in instruction[0]) or (instruction[0]=="beq") or (instruction[0]=="bne"): #CASO DO OPCODE COMO OPERADOR
-            #op rega regb value
-            verificaop(instruction[0]) #verifica a operação
-            verificareg(instruction[1]) #verifica primeiro registrador
-            verificareg(instruction[2]) #verifica segundo registrador
-            if "-" in instruction[3]:
-                b = "1"
-                instruction[3] = instruction[3].replace("-","")
-                numbin = bin(~int(instruction[3]))
-                numbin = numbin.replace("-", "")
-                sub = bin(int(numbin,2) - int(b, 2))
-                imm = sub.replace("0b","")
-                imm = imm.rjust(16, "1")
-                imm = imm.replace("-", "")
-            else:
-                imm = "{:016d}".format(int(bin(int(instruction[3])).replace("0b","")))
-            instbin.append(imm)
+           casoopcode(instruction)
         else: #CASO DO FUNCTION COMO OPERADOR
-            #rega #regb #regc #op
-            instbin.append("000000") #adiciona valor 0 ao opcode
-            verificareg(instruction[1]) #verifica reg 1
-            verificareg(instruction[2]) #verifica reg 2
-            verificareg(instruction[3]) #verifica reg 3
-            instbin.append("00000") #verifica sa
-            verificaop(instruction[0]) #add instrução
-
+            casofunction(instruction)
         instbin.insert(0, "0b")
 
         #Transformando para decimal
