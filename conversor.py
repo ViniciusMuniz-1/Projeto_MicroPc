@@ -1,3 +1,5 @@
+#https://docs.google.com/document/d/1R7723_xGjHCnNPqFmIiZDQS5AbxTrvVQ7oMJaBG_S5o/edit - Guia para entender o sistema
+
 #Farei aqui um programa que rode em uma sequência de instruções na minha ULA. Essas sequências possuem
 #um código cada uma, logo faz-se necessário declarar cada uma dessas intruções.
 
