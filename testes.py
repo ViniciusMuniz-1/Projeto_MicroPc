@@ -1,20 +1,22 @@
-from tkinter import *
+import PySimpleGUI as sg
+from tkinter import Button, Tk, font
 from tkinter.filedialog import askopenfilename
+
 janela_padrao = Tk().withdraw()
-janela = Tk()
 
-janela.title("Insira aqui o seu título")
 
-texto = Label(janela, text="Insira aqui o seu texto do botão")
+sg.theme('Dark')
+layout = [  [sg.Text('Converta Assembly para Hexadecimal aqui:')],
+            [sg.Button('Converter',size=(10,5),font = ("Comic Sans", 10)),  sg.Button('Não converter',size=(10,5),font = ("Comic Sans", 10))]]
 
-texto.grid(column=0, row=0, padx=10, pady=10)
+# Create the Window
+window = sg.Window('Conversor', layout,size=(300, 300))
+# Event Loop to process "events" and get the "values" of the inputs
+while True:
+    event, values = window()
+    if event == sg.WIN_CLOSED or event == 'Não converter': # if user closes window or clicks cancel
+        break
+    caminho_do_arquivo = askopenfilename(filetypes = (("Arquivos de texto", "*.txt"), ("Arquivos csv", "*.csv")))
+    break
 
-botao = Button(janela, text="Insira aqui a ação do seu botão", command=askopenfilename(filetypes = (("Arquivos de texto", "*.txt"), ("Arquivos csv", "*.csv"))))
-
-botao.grid(column=0, row=1, padx=10, pady=10)
-
-texto_resposta = Label(janela, text="")
-
-texto_resposta.grid(column=0, row=2, padx=10, pady=10)
-
-janela.mainloop()
+window.close()
