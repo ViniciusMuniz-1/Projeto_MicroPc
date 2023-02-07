@@ -160,15 +160,15 @@ janela_padrao = Tk().withdraw()
 
 #Criação do layout interface
 sg.theme('Dark Grey 13')
-layout = [  [sg.Text('Converta Assembly para Hexadecimal aqui:')],
-            [sg.Button('Converter',size=(10,5),font = ("Comic Sans", 10)),  sg.Button('Não converter',size=(10,5),font = ("Comic Sans", 10))]],
+layout = [  [sg.Image("unnamed.png"), sg.Text('Converta Assembly para Hexadecimal aqui:')],
+            [sg.Button('Converter trivialmente',size=(10,5),font = ("Comic Sans", 10)),  sg.Button('Não converter :(',size=(10,5),font = ("Comic Sans", 10))]],
 
 # Cria a janela
 window = sg.Window('Conversor', layout,size=(300, 200))
 # Loop de eventos
 while True:
     event, values = window()
-    if event == sg.WIN_CLOSED or event == 'Não converter': # if user closes window or clicks cancel
+    if event == sg.WIN_CLOSED or event == 'Não converter :(': # if user closes window or clicks cancel
         sys.exit()
     caminho_do_arquivo = askopenfilename(filetypes = (("Arquivos de texto", "*.txt"), ("Arquivos csv", "*.csv")))
     nome = sg.popup_get_text("Digite o nome do arquivo")
