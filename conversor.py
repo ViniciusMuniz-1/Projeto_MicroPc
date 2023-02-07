@@ -9,11 +9,29 @@
                  #Saída: lista em hex
 
 #Bloco de código utilizado para abrir a seleção de arquivos
-from tkinter import Tk
+import sys
+import PySimpleGUI as sg
+from tkinter import Button, Tk
 from tkinter.filedialog import askopenfilename
 
 janela_padrao = Tk().withdraw()
-caminho_do_arquivo = askopenfilename(filetypes = (("Arquivos de texto", "*.txt"), ("Arquivos csv", "*.csv")))
+
+#Criação da interface
+sg.theme('Dark Grey 13')
+layout = [  [sg.Text('Converta Assembly para Hexadecimal aqui:')],
+            [sg.Button('Converter',size=(10,5),font = ("Comic Sans", 10)),  sg.Button('Não converter',size=(10,5),font = ("Comic Sans", 10))]],
+
+# Create the Window
+window = sg.Window('Conversor', layout,size=(300, 200))
+# Event Loop to process "events" and get the "values" of the inputs
+while True:
+    event, values = window()
+    if event == sg.WIN_CLOSED or event == 'Não converter': # if user closes window or clicks cancel
+        sys.exit()
+    caminho_do_arquivo = askopenfilename(filetypes = (("Arquivos de texto", "*.txt"), ("Arquivos csv", "*.csv")))
+    nome = sg.popup_get_text("Digite o nome do arquivo")
+    break
+window.close()
 
 #Bloco de código que transforma a instrução em binário
 def verificaop(instruction):
@@ -189,8 +207,7 @@ valuehex=[]
 for i in range(0,cont):
     valuehex.append(hex(valuedec[i]).replace("0x", "") + "\n")
 
-print("Nome do arquivo:")
-nome = input()+".txt"
+nome = nome+".txt"
 arqhex = open(nome, 'w')
 arqhex.write("v2.0 raw\n")
 arqhex.writelines(valuehex)
